@@ -101,7 +101,7 @@ def get_accounts(account_id):
     except ValueError:
         # Return 400 Bad Request if account_id is not an integer
         return jsonify({"error": "Invalid account ID format, must be an integer"}), status.HTTP_400_BAD_REQUEST
-    
+
     app.logger.info("Request to read an Account with id: %s", account_id)
     account = Account.find(account_id)
     if not account:
