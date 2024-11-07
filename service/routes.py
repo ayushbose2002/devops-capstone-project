@@ -89,16 +89,24 @@ def list_accounts():
 ######################################################################
 
 
-@app.route("/accounts/<int:account_id>", methods=["GET"])
+@app.route("/accounts/<account_id>", methods=["GET"])
 def get_accounts(account_id):
     """
-    Reads an Account
-    This endpoint will read an Account based the account_id that is requested
+    Reads an Account based on account_id
+    This endpoint will return an account if it exists, otherwise return a 404 error.
     """
+    # Check if account_id is a valid integer
+    try:
+        account_id = int(account_id)
+    except ValueError:
+        # Return 400 Bad Request if account_id is not an integer
+        return jsonify({"error": "Invalid account ID format, must be an integer"}), status.HTTP_400_BAD_REQUEST
+
     app.logger.info("Request to read an Account with id: %s", account_id)
     account = Account.find(account_id)
     if not account:
         abort(status.HTTP_404_NOT_FOUND, f"Account with id [{account_id}] could not be found.")
+
     return account.serialize(), status.HTTP_200_OK
 
 
